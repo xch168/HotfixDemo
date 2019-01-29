@@ -27,3 +27,29 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
 }
+
+def patchPath = 'com/github/xch168/hotfixdemo/Title'
+
+task hotfix {
+    doLast {
+        File patchDir = file('./build/patch')
+        if (patchDir.exists()) {
+            exec {
+                commandLine 'rm', '-r', './build/patch'
+            }
+        }
+
+        exec {
+            commandLine 'mkdir', './build/patch'
+        }
+        exec {
+            commandLine 'javac', "./src/main/java/${patchPath}.java", '-d', './build/patch'
+        }
+        exec {
+            commandLine '/Users/xch/Library/Android/sdk/build-tools/28.0.3/d8', "./build/patch/${patchPath}.class", '--output', './build/patch'
+        }
+        exec {
+            commandLine 'mv', "./build/patch/classes.dex", './build/patch/hotfix.dex'
+        }
+    }
+}
