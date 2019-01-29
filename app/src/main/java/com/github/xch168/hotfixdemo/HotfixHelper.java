@@ -27,7 +27,7 @@ public class HotfixHelper {
     private static void downloadPatch(final File patchFile, final OnPatchLoadListener listener) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("")
+                .url("http://pm3fh7vxn.bkt.clouddn.com/hotfix.dex")
                 .get()
                 .build();
         client.newCall(request)
@@ -37,6 +37,7 @@ public class HotfixHelper {
                       if (listener != null) {
                           listener.onFailure();
                       }
+                      e.printStackTrace();
                   }
 
                   @Override
@@ -54,23 +55,19 @@ public class HotfixHelper {
     public static void applyPatch(Context context) {
         ClassLoader classLoader = context.getClassLoader();
         Class loaderClass = BaseDexClassLoader.class;
-        try
-        {
+        try {
             Object hostPathList = ReflectUtil.getField(loaderClass, classLoader, "pathList");
             Object hostDexElement = ReflectUtil.getField(hostPathList.getClass(), hostPathList, "dexElements");
 
-            PathClassLoader patchClassLoader = new PathClassLoader("", null);
-            Object patchPathList = ReflectUtil.getField(patchClassLoader.getClass(), patchClassLoader, "pathList");
+            PathClassLoader patchClassLoader = new PathClassLoader(context.getCacheDir() + "/hotfix.dex", null);
+            Object patchPathList = ReflectUtil.getField(loaderClass, patchClassLoader, "pathList");
             Object patchDexElement = ReflectUtil.getField(patchPathList.getClass(), patchPathList, "dexElements");
 
-            combineArray(hostDexElement, patchDexElement);
-        }
-        catch (NoSuchFieldException e)
-        {
+            Object newDexElements = combineArray(hostDexElement, patchDexElement);
+            ReflectUtil.setField(hostPathList.getClass(), hostPathList, "dexElements", newDexElements);
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
-        {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
