@@ -2,6 +2,7 @@ package com.github.xch168.hotfixdemo;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +21,9 @@ public class HotfixHelper {
 
     public static void loadPatch(Context context, OnPatchLoadListener listener) {
         File patchFile = new File(context.getCacheDir() + "/hotfix.dex");
+        if (patchFile.exists()) {
+            patchFile.delete();
+        }
 
         downloadPatch(patchFile, listener);
     }
@@ -42,12 +46,19 @@ public class HotfixHelper {
 
                   @Override
                   public void onResponse(Call call, Response response) throws IOException {
-                      FileOutputStream fos = new FileOutputStream(patchFile);
-                      fos.write(response.body().bytes());
-                      fos.close();
-                      if (listener != null) {
-                          listener.onSuccess();
+                      if (response.code() == 200) {
+                          FileOutputStream fos = new FileOutputStream(patchFile);
+                          fos.write(response.body().bytes());
+                          fos.close();
+                          if (listener != null) {
+                              listener.onSuccess();
+                          }
+                      } else {
+                          if (listener != null) {
+                              listener.onFailure();
+                          }
                       }
+
                   }
               });
     }
