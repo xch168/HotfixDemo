@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 
 import dalvik.system.BaseDexClassLoader;
+import dalvik.system.DexClassLoader;
 import dalvik.system.PathClassLoader;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -70,7 +71,12 @@ public class HotfixHelper {
             Object hostPathList = ReflectUtil.getField(loaderClass, classLoader, "pathList");
             Object hostDexElement = ReflectUtil.getField(hostPathList.getClass(), hostPathList, "dexElements");
 
-            PathClassLoader patchClassLoader = new PathClassLoader(context.getCacheDir() + "/hotfix.dex", null);
+            File optimizeDir = new File(context.getCacheDir() + "/optimize");
+            if (!optimizeDir.exists()) {
+                optimizeDir.mkdir();
+            }
+
+            DexClassLoader patchClassLoader = new DexClassLoader(context.getCacheDir() + "/hotfix.dex", optimizeDir.getPath(), null, classLoader);
             Object patchPathList = ReflectUtil.getField(loaderClass, patchClassLoader, "pathList");
             Object patchDexElement = ReflectUtil.getField(patchPathList.getClass(), patchPathList, "dexElements");
 
