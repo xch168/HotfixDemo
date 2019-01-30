@@ -2,7 +2,6 @@ package com.github.xch168.hotfixdemo;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,7 +10,6 @@ import java.lang.reflect.Array;
 
 import dalvik.system.BaseDexClassLoader;
 import dalvik.system.DexClassLoader;
-import dalvik.system.PathClassLoader;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
