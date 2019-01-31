@@ -21,6 +21,10 @@
         android:text="加载补丁"
         android:onClick="loadPatch"/>
 
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="杀掉应用"
+        android:onClick="killApp"/>
 
 </LinearLayout>

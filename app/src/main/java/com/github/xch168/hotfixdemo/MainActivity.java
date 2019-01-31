@@ -55,4 +55,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void killApp(View view) {
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 }
