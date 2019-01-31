@@ -49,7 +49,7 @@ task hotfix {
             commandLine '/Users/xch/Library/Android/sdk/build-tools/28.0.3/d8', "./build/patch/${patchPath}.class", '--output', './build/patch'
         }
         exec {
-            commandLine 'mv', "./build/patch/classes.dex", './build/patch/hotfix.dex'
+            commandLine 'mv', "./build/patch/classes.dex", './build/patch/patch.dex'
         }
     }
 }
